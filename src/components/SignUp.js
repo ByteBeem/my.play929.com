@@ -95,10 +95,10 @@ const SignUp = () => {
         <h1 style={isSmallScreen ? hiddenTitleStyles : titleStyles}>Play929.com</h1>
         <p style={isSmallScreen ? hiddenSloganStyles : sloganStyles}>Play and Win</p>
       </header>
-      <form className={styles.formLogin} onSubmit={submitHandler} autoComplete="off">
+      <form className={styles.formLogin} onSubmit={submitHandler} autoComplete="off" style={formStyles}>
       <h2 style={formTitleStyles}>Create Account</h2>
         <div>
-          <div className={errors.name && touched.name ? styles.unCompleted : !errors.name && touched.name ? styles.completed : undefined}>
+          <div  style={inputGroupStyles} className={errors.name && touched.name ? styles.unCompleted : !errors.name && touched.name ? styles.completed : undefined}>
             <input type="text" name="name" value={data.name} placeholder="Name" onChange={changeHandler} onFocus={focusHandler} autoComplete="off" />
             <img src={userIcon} alt="" />
           </div>
@@ -140,20 +140,7 @@ const SignUp = () => {
         </div>
       </form>
 
-      <div style={isSmallScreen ? verticalFeaturesContainer : horizontalFeaturesContainer}>
-        <div style={featureCard}>
-          <h3>Instant Withdrawals</h3>
-          <p>Fast , Safe and Secure Withdrawals!</p>
-        </div>
-        <div style={featureCard}>
-          <h3>Secure Transactions</h3>
-          <p>Your data is protected with top-tier security.</p>
-        </div>
-        <div style={featureCard}>
-          <h3>24/7 Support</h3>
-          <p>We're here to assist you at any time.</p>
-        </div>
-      </div>
+      
       <ToastContainer />
     </div>
   );
@@ -208,7 +195,7 @@ const formStyles = {
   maxWidth: "400px",
   margin: "0 auto",
   padding: "20px",
-  backgroundColor:'#fff',
+  backgroundColor:'#a8c2db',
   borderRadius:'15px 4px 15px'
 };
 

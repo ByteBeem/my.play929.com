@@ -194,7 +194,7 @@ const formStyles = {
   maxWidth: "400px",
   margin: "0 auto",
   padding: "20px",
-  backgroundColor:'#fff',
+  backgroundColor:'#a8c2db',
   borderRadius:'15px 4px 15px'
 };
 
@@ -246,7 +246,7 @@ const linkStyles = {
 };
 
 const linkTextStyles = {
-  color: "#00C6FF",
+  color: "#333",
 };
 
 const horizontalFeaturesContainer = {
