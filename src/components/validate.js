@@ -19,7 +19,7 @@ export const validate = (data, type) => {
 
   if (type === "signUp") {
     if (!data.name.trim()) {
-      errors.name = "Username is Required!";
+      errors.name = "name is Required!";
     } else {
       delete errors.name;
     }
