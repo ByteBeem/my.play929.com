@@ -29,58 +29,58 @@ const Login = () => {
 
 
   const checkData = (obj) => {
-    const { email, password } = obj;
-    const urlApi = "https://play929-0d1c32006aaf.herokuapp.com/auth/login"; 
-  
-    setLoading(true); 
-  
-    toast.promise(
-      axios.post(urlApi, {
-        email: email.toLowerCase(),
-        password: password,
-      }),
-      {
-        pending: "Logging you in...",
-        success: {
-          render({ data }) {
-            setLoading(false);
+  const { email, password } = obj;
+  const urlApi = "https://play929-0d1c32006aaf.herokuapp.com/auth/login"; 
 
-            if(data.status === 200){
-             
-            const redirectLink = response.data.link;
-        
+  setLoading(true); 
+
+  toast.promise(
+    axios.post(urlApi, {
+      email: email.toLowerCase(),
+      password: password,
+    }),
+    {
+      pending: "Logging you in...",
+      success: {
+        render({ data }) {
+          setLoading(false);
+
+         
+          if (data.status === 200) {
+            const redirectLink = data.data.link; 
+
             setTimeout(() => {
               window.location.href = redirectLink; 
             }, 3000); 
-            }
+          }
           return "Welcome back!";
-          }
-        },
-        error: {
-          render({ data }) {
-            setLoading(false);
-  
-           
-            if (data && data.response) {
-              const { status, data: errorData } = data.response;
-  
-              if (status === 401) {
-                return "Incorrect Email or Password.";
-              } else if (status === 404) {
-                return "The user could not be found.";
-              } else if (status === 500) {
-                return "Internal Server Error: Please try again later.";
-              } else {
-                return errorData.message || "An unexpected error occurred.";
-              }
+        }
+      },
+      error: {
+        render({ data }) {
+          setLoading(false);
+
+          if (data && data.response) {
+            const { status, data: errorData } = data.response;
+
+            if (status === 401) {
+              return "Incorrect Email or Password.";
+            } else if (status === 404) {
+              return "The user could not be found.";
+            } else if (status === 500) {
+              return "Internal Server Error: Please try again later.";
+            } else {
+              return errorData.message || "An unexpected error occurred.";
             }
-  
-            return "Network error: Please check your internet connection.";
           }
+
+          return "Network error: Please check your internet connection.";
         }
       }
-    );
-  };
+    }
+  );
+};
+
   
   
   const changeHandler = (event) => {
