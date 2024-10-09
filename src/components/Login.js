@@ -45,14 +45,15 @@ const Login = () => {
           render({ data }) {
             setLoading(false);
 
-            if(data.status ==- 200){
+            if(data.status === 200){
+             
             const redirectLink = response.data.link;
         
             setTimeout(() => {
               window.location.href = redirectLink; 
-            }, 2000); 
+            }, 3000); 
             }
-          return "";
+          return "Welcome back!";
           }
         },
         error: {
