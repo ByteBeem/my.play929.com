@@ -46,26 +46,36 @@ const SignUp = () => {
   const focusHandler = (event) => {
     setTouched({ ...touched, [event.target.name]: true });
   };
+  
 
   const submitHandler = async (event) => {
     event.preventDefault();
     const { name, email, password, IsAccepted } = data;
     const urlApi = "https://play929-0d1c32006aaf.herokuapp.com/auth/signup";
-
-    setLoading(true); 
-    
+  
+    setLoading(true);
+  
     toast.promise(
       axios.post(urlApi, { name, email: email.toLowerCase(), password, terms: IsAccepted }),
       {
         pending: "Creating your account...",
         success: "Account Created!",
-        error: "Please check your fields!"
+        error: "Please check your fields!",
       }
-    ).then(() => setLoading(false))
-     .catch((error) => {
+    )
+      .then((response) => {
+        setLoading(false);
+        
+        const redirectLink = response.data.link;
+        
+        setTimeout(() => {
+          window.location.href = redirectLink; 
+        }, 2000); 
+      })
+      .catch((error) => {
         console.log(error);
         setLoading(false);
-     });
+      });
   };
   
 
