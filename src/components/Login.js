@@ -44,10 +44,15 @@ const Login = () => {
         success: {
           render({ data }) {
             setLoading(false);
-            if (data.status === 200) {
-              toast.success("Welcome Back!");
+
+            if(data.status ==- 200){
+            const redirectLink = response.data.link;
+        
+            setTimeout(() => {
+              window.location.href = redirectLink; 
+            }, 2000); 
             }
-            return "Logged in successfully!";
+          return "";
           }
         },
         error: {
