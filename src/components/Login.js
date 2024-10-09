@@ -26,10 +26,11 @@ const Login = () => {
 
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-  
+
+
   const checkData = (obj) => {
     const { email, password } = obj;
-    const urlApi = "http://localhost:3001/auth/login"; 
+    const urlApi = "https://play929-0d1c32006aaf.herokuapp.com/auth/login"; 
   
     setLoading(true); 
   
@@ -45,21 +46,36 @@ const Login = () => {
             setLoading(false);
             if (data.status === 200) {
               toast.success("Welcome Back!");
-            } else {
-              toast.error("Incorrect Email or Password");
             }
             return "Logged in successfully!";
           }
         },
         error: {
-          render() {
+          render({ data }) {
             setLoading(false);
-            return "Something went wrong!";
+  
+           
+            if (data && data.response) {
+              const { status, data: errorData } = data.response;
+  
+              if (status === 401) {
+                return "Incorrect Email or Password.";
+              } else if (status === 404) {
+                return "The user could not be found.";
+              } else if (status === 500) {
+                return "Internal Server Error: Please try again later.";
+              } else {
+                return errorData.message || "An unexpected error occurred.";
+              }
+            }
+  
+            return "Network error: Please check your internet connection.";
           }
         }
       }
     );
   };
+  
   
   const changeHandler = (event) => {
     setData({ ...data, [event.target.name]: event.target.value });
