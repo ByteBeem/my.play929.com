@@ -3,6 +3,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import url from './ednpoint';
 
 const Login = () => {
   const [data, setData] = useState({
@@ -30,7 +31,7 @@ const Login = () => {
 
   const checkData = (obj) => {
     const { email, password } = obj;
-    const urlApi = "https://play929-0d1c32006aaf.herokuapp.com/auth/login"; 
+    const urlApi = `${url}/auth/login`; 
   
     setLoading(true); 
   
@@ -50,7 +51,7 @@ const Login = () => {
         
             setTimeout(() => {
               window.location.href = redirectLink; 
-            }, 2000); 
+            }, 1000); 
             }
           return "";
           }

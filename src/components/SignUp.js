@@ -8,10 +8,12 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import url from './ednpoint';
 
 const SignUp = () => {
   const [data, setData] = useState({
     name: "",
+    surname: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -29,7 +31,7 @@ const SignUp = () => {
     };
 
     window.addEventListener("resize", handleResize);
-    handleResize(); 
+    handleResize();
 
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -46,17 +48,22 @@ const SignUp = () => {
   const focusHandler = (event) => {
     setTouched({ ...touched, [event.target.name]: true });
   };
-  
 
   const submitHandler = async (event) => {
     event.preventDefault();
-    const { name, email, password, IsAccepted } = data;
-    const urlApi = "https://play929-0d1c32006aaf.herokuapp.com/auth/signup";
-  
+    const { name, surname, email, password, IsAccepted } = data;
+    const urlApi = `${url}/auth/signup`;
+
     setLoading(true);
-  
+
     toast.promise(
-      axios.post(urlApi, { name, email: email.toLowerCase(), password, terms: IsAccepted }),
+      axios.post(urlApi, {
+        name,
+        surname,
+        email: email.toLowerCase(),
+        password,
+        terms: IsAccepted,
+      }),
       {
         pending: "Creating your account...",
         success: "Account Created!",
@@ -65,19 +72,16 @@ const SignUp = () => {
     )
       .then((response) => {
         setLoading(false);
-        
         const redirectLink = response.data.link;
-        
         setTimeout(() => {
-          window.location.href = redirectLink; 
-        }, 2000); 
+          window.location.href = redirectLink;
+        }, 2000);
       })
       .catch((error) => {
         console.log(error);
         setLoading(false);
       });
   };
-  
 
   return (
     <div style={pageStyles}>
@@ -91,17 +95,76 @@ const SignUp = () => {
 
         {/* Name Field */}
         <div>
-          <div style={inputGroupStyles} className={errors.name && touched.name ? styles.unCompleted : !errors.name && touched.name ? styles.completed : undefined}>
-            <input type="text" name="name" value={data.name} placeholder="Name" onChange={changeHandler} onFocus={focusHandler} autoComplete="off" />
+          <div
+            style={inputGroupStyles}
+            className={
+              errors.name && touched.name
+                ? styles.unCompleted
+                : !errors.name && touched.name
+                ? styles.completed
+                : undefined
+            }
+          >
+            <input
+              type="text"
+              name="name"
+              value={data.name}
+              placeholder="Name"
+              onChange={changeHandler}
+              onFocus={focusHandler}
+              autoComplete="off"
+            />
             <img src={userIcon} alt="User icon" />
           </div>
           {errors.name && touched.name && <span className={styles.error}>{errors.name}</span>}
         </div>
 
+        {/* Surname Field */}
+        <div>
+          <div
+            style={inputGroupStyles}
+            className={
+              errors.surname && touched.surname
+                ? styles.unCompleted
+                : !errors.surname && touched.surname
+                ? styles.completed
+                : undefined
+            }
+          >
+            <input
+              type="text"
+              name="surname"
+              value={data.surname}
+              placeholder="Surname"
+              onChange={changeHandler}
+              onFocus={focusHandler}
+              autoComplete="off"
+            />
+            <img src={userIcon} alt="Surname icon" />
+          </div>
+          {errors.surname && touched.surname && <span className={styles.error}>{errors.surname}</span>}
+        </div>
+
         {/* Email Field */}
         <div>
-          <div className={errors.email && touched.email ? styles.unCompleted : !errors.email && touched.email ? styles.completed : undefined}>
-            <input type="text" name="email" value={data.email} placeholder="E-mail" onChange={changeHandler} onFocus={focusHandler} autoComplete="off" />
+          <div
+            className={
+              errors.email && touched.email
+                ? styles.unCompleted
+                : !errors.email && touched.email
+                ? styles.completed
+                : undefined
+            }
+          >
+            <input
+              type="text"
+              name="email"
+              value={data.email}
+              placeholder="E-mail"
+              onChange={changeHandler}
+              onFocus={focusHandler}
+              autoComplete="off"
+            />
             <img src={emailIcon} alt="Email icon" />
           </div>
           {errors.email && touched.email && <span className={styles.error}>{errors.email}</span>}
@@ -109,8 +172,24 @@ const SignUp = () => {
 
         {/* Password Field */}
         <div>
-          <div className={errors.password && touched.password ? styles.unCompleted : !errors.password && touched.password ? styles.completed : undefined}>
-            <input type="password" name="password" value={data.password} placeholder="Password" onChange={changeHandler} onFocus={focusHandler} autoComplete="off" />
+          <div
+            className={
+              errors.password && touched.password
+                ? styles.unCompleted
+                : !errors.password && touched.password
+                ? styles.completed
+                : undefined
+            }
+          >
+            <input
+              type="password"
+              name="password"
+              value={data.password}
+              placeholder="Password"
+              onChange={changeHandler}
+              onFocus={focusHandler}
+              autoComplete="off"
+            />
             <img src={passwordIcon} alt="Password icon" />
           </div>
           {errors.password && touched.password && <span className={styles.error}>{errors.password}</span>}
@@ -118,8 +197,24 @@ const SignUp = () => {
 
         {/* Confirm Password Field */}
         <div>
-          <div className={errors.confirmPassword && touched.confirmPassword ? styles.unCompleted : !errors.confirmPassword && touched.confirmPassword ? styles.completed : undefined}>
-            <input type="password" name="confirmPassword" value={data.confirmPassword} placeholder="Confirm Password" onChange={changeHandler} onFocus={focusHandler} autoComplete="off" />
+          <div
+            className={
+              errors.confirmPassword && touched.confirmPassword
+                ? styles.unCompleted
+                : !errors.confirmPassword && touched.confirmPassword
+                ? styles.completed
+                : undefined
+            }
+          >
+            <input
+              type="password"
+              name="confirmPassword"
+              value={data.confirmPassword}
+              placeholder="Confirm Password"
+              onChange={changeHandler}
+              onFocus={focusHandler}
+              autoComplete="off"
+            />
             <img src={passwordIcon} alt="Confirm password icon" />
           </div>
           {errors.confirmPassword && touched.confirmPassword && <span className={styles.error}>{errors.confirmPassword}</span>}
@@ -128,7 +223,14 @@ const SignUp = () => {
         {/* Terms Checkbox */}
         <div>
           <div className={styles.terms} style={linkStyles}>
-            <input type="checkbox" name="IsAccepted" checked={data.IsAccepted} id="accept" onChange={changeHandler} onFocus={focusHandler} />
+            <input
+              type="checkbox"
+              name="IsAccepted"
+              checked={data.IsAccepted}
+              id="accept"
+              onChange={changeHandler}
+              onFocus={focusHandler}
+            />
             <label htmlFor="accept">I accept terms of privacy policy</label>
           </div>
           {errors.IsAccepted && touched.IsAccepted && <span className={styles.error}>{errors.IsAccepted}</span>}
@@ -136,12 +238,11 @@ const SignUp = () => {
 
         {/* Submit Button */}
         <div>
-        {!loading && ( 
-          <button type="submit" style={buttonStyles} disabled={loading}>
-             Create Account
-        
-          </button>
-        )}
+          {!loading && (
+            <button type="submit" style={buttonStyles} disabled={loading}>
+              Create Account
+            </button>
+          )}
           <span style={linkStyles}>
             Already have an account? <Link to="/login">Sign In</Link>
           </span>
@@ -215,21 +316,15 @@ const inputGroupStyles = {
 const buttonStyles = {
   backgroundColor: "#333",
   color: "#fff",
+  padding: "12px",
   border: "none",
-  padding: "12px 25px",
-  borderRadius: "25px",
+  borderRadius: "5px",
   cursor: "pointer",
-  marginTop: "10px",
-  fontSize: "16px",
-  width: "100%",
 };
 
 const linkStyles = {
+  marginTop: "12px",
   color: "#333",
-  textAlign: "center",
-  display: "inline-block",
-  width: "100%",
-  marginTop: "10px",
 };
 
 export default SignUp;
