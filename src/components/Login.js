@@ -31,7 +31,7 @@ const Login = () => {
 
   const checkData = (obj) => {
     const { email, password } = obj;
-    const urlApi = `${url}/auth/login`; 
+    const urlApi = "https://play929-0d1c32006aaf.herokuapp.com/auth/login"; 
   
     setLoading(true); 
   
@@ -46,12 +46,13 @@ const Login = () => {
           render({ data }) {
             setLoading(false);
 
-            if(data.status ==- 200){
-            const redirectLink = response.data.link;
-        
+         
+          if (data.status === 200) {
+            const redirectLink = data.data.link; 
+
             setTimeout(() => {
               window.location.href = redirectLink; 
-            }, 1000); 
+            }, 2000); 
             }
           return "";
           }
