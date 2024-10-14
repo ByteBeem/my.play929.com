@@ -31,7 +31,7 @@ const Login = () => {
 
   const checkData = (obj) => {
     const { email, password } = obj;
-    const urlApi = "https://play929-0d1c32006aaf.herokuapp.com/auth/login"; 
+    const urlApi = `${url}/api/Account/Login`; 
   
     setLoading(true); 
   

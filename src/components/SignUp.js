@@ -52,7 +52,7 @@ const SignUp = () => {
   const submitHandler = async (event) => {
     event.preventDefault();
     const { name, surname, email, password, IsAccepted } = data;
-    const urlApi = `${url}/auth/signup`;
+    const urlApi = `${url}/api/Account/CreateAccount`;
 
     setLoading(true);
 

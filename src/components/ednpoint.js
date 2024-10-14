@@ -1,4 +1,4 @@
-const url = 'https://play929-0d1c32006aaf.herokuapp.com';
+const url = 'https://play929-main-ec90bb9581d3.herokuapp.com';
 
 
 export default url;
