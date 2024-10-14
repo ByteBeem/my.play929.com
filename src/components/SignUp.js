@@ -72,7 +72,7 @@ const SignUp = () => {
     )
       .then((response) => {
         setLoading(false);
-        const redirectLink = response.data.Link;
+        const redirectLink = response.data.link;
         setTimeout(() => {
           window.location.href = redirectLink;
         }, 2000);
