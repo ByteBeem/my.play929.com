@@ -48,7 +48,7 @@ const Login = () => {
 
          
           if (data.status === 200) {
-            const redirectLink = data.data.link; 
+            const redirectLink = data.data.Link; 
 
             setTimeout(() => {
               window.location.href = redirectLink; 
