@@ -36,32 +36,38 @@ const Login = () => {
     setLoading(true); 
   
     toast.promise(
-      axios.post(urlApi, {
-        email: email.toLowerCase(),
-        password: password,
-      }),
+      axios.post(
+        urlApi,
+        {
+          email: email.toLowerCase(),
+          password: password,
+        },
+        {
+          withCredentials: true,  
+        }
+      ),
       {
         pending: "Logging you in...",
         success: {
           render({ data }) {
             setLoading(false);
+  
+            if (data.status === 200) {
+              const redirectLink = data.data.link;
 
-         
-          if (data.status === 200) {
-            const redirectLink = data.data.link; 
-
-            setTimeout(() => {
-              window.location.href = redirectLink; 
-            }, 2000); 
+              setTimeout(() => {
+                window.location.href = redirectLink;
+              }, 2000);
+              
+              return "Welcome back.";
             }
-          return "";
-          }
+            return "";
+          },
         },
         error: {
           render({ data }) {
             setLoading(false);
   
-           
             if (data && data.response) {
               const { status, data: errorData } = data.response;
   
@@ -77,11 +83,12 @@ const Login = () => {
             }
   
             return "Network error: Please check your internet connection.";
-          }
-        }
+          },
+        },
       }
     );
   };
+  
   
   
   const changeHandler = (event) => {

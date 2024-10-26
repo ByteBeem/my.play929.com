@@ -63,7 +63,13 @@ const SignUp = () => {
         email: email.toLowerCase(),
         password,
         TermsAccepted: IsAccepted,
-      }),
+      },
+
+      {
+        withCredentials: true,  
+      }
+    
+    ),
       {
         pending: "Creating your account...",
         success: "Account Created!",
