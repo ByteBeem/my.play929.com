@@ -9,26 +9,42 @@ export const validate = (data, type) => {
     delete errors.email;
   }
 
-  if (!data.password) {
-    errors.password = "Password is Required";
-  } else if (!(data.password.length >= 6)) {
-    errors.password = "Password needs to be 6 character or more";
-  } else {
-    delete errors.password;
-  }
+  
+  
 
   if (type === "signUp") {
-    if (!data.name.trim()) {
-      errors.name = "name is Required!";
+    if (!data.password) {
+      errors.password = "Password is Required";
+    } if (!(data.password.length >= 6)) {
+      errors.password = "Password needs to be 6 characters or more";
+    } if (!/[a-z]/.test(data.password)) {
+      errors.password = "Password must contain at least one lowercase letter";
+    } if (!/[A-Z]/.test(data.password)) {
+      errors.password = "Password must contain at least one uppercase letter";
+    } if (!/[0-9]/.test(data.password)) {
+      errors.password = "Password must contain at least one number";
+    } if (!/[!@#$%^&*(),.?":{}|<>]/.test(data.password)) {
+      errors.password = "Password must contain at least one special character";
+    } else {
+      delete errors.password;
+    }
+
+    if (!data.fullName.trim()) {
+      errors.name = "fullName is Required!";
     } else {
       delete errors.name;
     }
-    if (!data.confirmPassword) {
-      errors.confirmPassword = "Confirm the Password";
-    } else if (!(data.confirmPassword === data.password)) {
-      errors.confirmPassword = "Password is not match!";
+    if (!data.surname.trim()) {
+      errors.surname = "Surname is Required!";
     } else {
-      delete errors.confirmPassword;
+      delete errors.surname;
+    }
+    if (!data.confirmPassword) {
+      errors.password = "Confirm the Password";
+    } else if (!(data.confirmPassword === data.password)) {
+      errors.password = "Password does not match!";
+    } else {
+      delete errors.password;
     }
 
     if (data.IsAccepted) {

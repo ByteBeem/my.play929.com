@@ -2,54 +2,78 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { loginUser } from "../requests";
 import play929Logo from "./p.png";
+import { validate } from "../validate";
 
 const Login = () => {
-  const [data, setData] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+  };
 
   const handleLogin = async (event) => {
     event.preventDefault();
-    setLoading(true);
-    try {
-      await loginUser(data.email, data.password); 
 
-    } catch (error) {
-      setLoading(false);
-      
-      console.error(error);
+    const validationErrors = validate(formData, '');
+
+    setErrors(validationErrors);
+
+    if (Object.keys(validationErrors).length === 0) {
+      setLoading(true);
+      try {
+        await loginUser(formData.email, formData.password); 
+      } catch (error) {
+        setLoading(false);
+        console.error(error);
+      }
     }
   };
-
 
   return (
     <div style={pageStyles}>
       <div style={containerStyles}>
         <div style={leftPanelStyles}>
-        <img src={play929Logo} alt="Play929 Logo" style={logoStyles} />
+          <img src={play929Logo} alt="Play929 Logo" style={logoStyles} />
           <h1 style={titleStyles}>Play929.com</h1>
           <p style={subtitleStyles}>Your security is our priority – play with confidence.</p>
         </div>
         <div style={rightPanelStyles}>
           <form onSubmit={handleLogin} style={formStyles}>
-            <input
-              type="text"
-              name="email"
-              value={data.email}
-              onChange={(e) => setData({ ...data, email: e.target.value })}
-              placeholder="Email"
-              required
-              style={inputStyles}
-            />
-            <input
-              type="password"
-              name="password"
-              value={data.password}
-              onChange={(e) => setData({ ...data, password: e.target.value })}
-              placeholder="Password"
-              required
-              style={inputStyles}
-            />
+            <div style={inputContainerStyles}>
+              <input
+                type="text"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="Email"
+                required
+                style={inputStyles}
+              />
+              {errors.email && <p style={errorStyles}>{errors.email}</p>}
+            </div>
+
+            <div style={inputContainerStyles}>
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="Password"
+                required
+                style={inputStyles}
+              />
+              {errors.password && <p style={errorStyles}>{errors.password}</p>}
+            </div>
+
             <button type="submit" style={buttonStyles} disabled={loading}>
               {loading ? "Logging in..." : "Log In"}
             </button>
@@ -63,7 +87,6 @@ const Login = () => {
           </form>
         </div>
       </div>
-     
     </div>
   );
 };
@@ -132,10 +155,13 @@ const formStyles = {
   textAlign: "center",
 };
 
+const inputContainerStyles = {
+  marginBottom: "15px"
+};
+
 const inputStyles = {
   width: "100%",
   padding: "12px",
-  marginBottom: "20px",
   borderRadius: "6px",
   border: "1px solid #ddd",
   fontSize: "14px",
@@ -174,6 +200,12 @@ const signupButtonStyles = {
   borderRadius: "6px",
   textDecoration: "none",
   fontWeight: "bold",
+};
+
+const errorStyles = {
+  color: "red",
+  fontSize: "12px",
+  marginTop: "5px",
 };
 
 // Responsive Design using Media Queries

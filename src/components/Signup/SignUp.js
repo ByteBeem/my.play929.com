@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { validate } from "../validate";
 
 const Signup = () => {
   const [data, setData] = useState({
@@ -10,14 +11,24 @@ const Signup = () => {
     password: "",
     confirmPassword: "",
   });
+  const [errors, setErrors] = useState({});
 
   const changeHandler = (event) => {
     setData({ ...data, [event.target.name]: event.target.value });
   };
 
+
+
   const submitHandler = (event) => {
     event.preventDefault();
-    console.log("Form submitted", data);
+    const validationErrors = validate(data, 'signUp');
+  
+    setErrors(validationErrors);
+
+    if (Object.keys(validationErrors).length === 0) {
+      console.log("Form submitted", data);
+      // Proceed with form submission
+    }
   };
 
   return (
@@ -34,16 +45,18 @@ const Signup = () => {
               placeholder="Full Name(s)"
               value={data.fullName}
               onChange={changeHandler}
-              required
+              
             />
+            {errors.fullName && <p className="error">{errors.fullName}</p>}
             <input
               type="text"
               name="surname"
               placeholder="Surname"
               value={data.surname}
               onChange={changeHandler}
-              required
+             
             />
+            {errors.surname && <p className="error">{errors.surname}</p>}
           </div>
           <input
             type="email"
@@ -51,8 +64,9 @@ const Signup = () => {
             placeholder="Email"
             value={data.email}
             onChange={changeHandler}
-            required
+            
           />
+          {errors.email && <p className="error">{errors.email}</p>}
           <div className="country-group">
             <select name="country" value={data.country} onChange={changeHandler}>
               <option value="South Africa">South Africa</option>
@@ -66,7 +80,7 @@ const Signup = () => {
             placeholder="Password"
             value={data.password}
             onChange={changeHandler}
-            required
+           
           />
           <input
             type="password"
@@ -74,8 +88,9 @@ const Signup = () => {
             placeholder="Confirm Password"
             value={data.confirmPassword}
             onChange={changeHandler}
-            required
+           
           />
+          {errors.password && <p className="error">{errors.password}</p>}
           <p className="terms-text">
             By registering, I declare that I have carefully read, understood, and
             accepted the entire text of the Company's Legal Documents and Privacy Policy.
@@ -89,7 +104,7 @@ const Signup = () => {
   );
 };
 
-const styles = `
+const styles = ` 
   body {
     background-color: #f0f2f5;
     font-family: 'Roboto', sans-serif;
@@ -117,7 +132,11 @@ const styles = `
     margin-bottom: 20px;
   }
 
-  
+  .error {
+  color: "red";
+  fontSize: "12px";
+  marginTop: "5px";
+}
 
   .signup-box h2 {
     font-size: 24px;
@@ -193,6 +212,8 @@ const styles = `
   .login-link:hover {
     text-decoration: underline;
   }
+
+  
 
   @media (max-width: 768px) {
     .signup-container {
