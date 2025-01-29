@@ -117,6 +117,8 @@ const styles = `
     margin-bottom: 20px;
   }
 
+  
+
   .signup-box h2 {
     font-size: 24px;
     font-weight: bold;

@@ -103,7 +103,7 @@ const titleStyles = {
 };
 
 const logoStyles = {
-  width: "24px",
+  width: "80px",
   marginBottom: "10px",
   borderRadius: "16px",
 };
