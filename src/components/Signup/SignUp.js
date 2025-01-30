@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { validate } from "../validate";
+import { CreateAccount } from "../requests";
 
 const Signup = () => {
   const [data, setData] = useState({
@@ -11,24 +12,27 @@ const Signup = () => {
     password: "",
     confirmPassword: "",
   });
+
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false); 
 
   const changeHandler = (event) => {
     setData({ ...data, [event.target.name]: event.target.value });
   };
 
-
-
-  const submitHandler = (event) => {
+  const submitHandler = async (event) => {
     event.preventDefault();
-    const validationErrors = validate(data, 'signUp');
-  
-    setErrors(validationErrors);
-
-    if (Object.keys(validationErrors).length === 0) {
-      console.log("Form submitted", data);
-      // Proceed with form submission
-    }
+   
+      setLoading(true);
+      try {
+        await CreateAccount(data);
+        setLoading(false);
+       
+      } catch (error) {
+        setLoading(false);
+        console.error(error);
+      }
+    
   };
 
   return (
@@ -39,34 +43,37 @@ const Signup = () => {
         <p>It's quick and easy.</p>
         <form onSubmit={submitHandler}>
           <div className="input-group">
-            <input
-              type="text"
-              name="fullName"
-              placeholder="Full Name(s)"
-              value={data.fullName}
-              onChange={changeHandler}
-              
-            />
-            {errors.fullName && <p className="error">{errors.fullName}</p>}
-            <input
-              type="text"
-              name="surname"
-              placeholder="Surname"
-              value={data.surname}
-              onChange={changeHandler}
-             
-            />
-            {errors.surname && <p className="error">{errors.surname}</p>}
+            <div>
+              <input
+                type="text"
+                name="fullName"
+                placeholder="Full Name(s)"
+                value={data.fullName}
+                onChange={changeHandler}
+              />
+              {errors.fullName && <p className="error">{errors.fullName}</p>}
+            </div>
+            <div>
+              <input
+                type="text"
+                name="surname"
+                placeholder="Surname"
+                value={data.surname}
+                onChange={changeHandler}
+              />
+              {errors.surname && <p className="error">{errors.surname}</p>}
+            </div>
           </div>
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            value={data.email}
-            onChange={changeHandler}
-            
-          />
-          {errors.email && <p className="error">{errors.email}</p>}
+          <div>
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={data.email}
+              onChange={changeHandler}
+            />
+            {errors.email && <p className="error">{errors.email}</p>}
+          </div>
           <div className="country-group">
             <select name="country" value={data.country} onChange={changeHandler}>
               <option value="South Africa">South Africa</option>
@@ -74,36 +81,43 @@ const Signup = () => {
             </select>
             <img src="../SA.png" alt="SA Flag" className="flag-icon" />
           </div>
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={data.password}
-            onChange={changeHandler}
-           
-          />
-          <input
-            type="password"
-            name="confirmPassword"
-            placeholder="Confirm Password"
-            value={data.confirmPassword}
-            onChange={changeHandler}
-           
-          />
+          <div>
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              value={data.password}
+              onChange={changeHandler}
+            />
+          </div>
+          <div>
+            <input
+              type="password"
+              name="confirmPassword"
+              placeholder="Confirm Password"
+              value={data.confirmPassword}
+              onChange={changeHandler}
+            />
+          </div>
           {errors.password && <p className="error">{errors.password}</p>}
           <p className="terms-text">
             By registering, I declare that I have carefully read, understood, and
             accepted the entire text of the Company's Legal Documents and Privacy Policy.
             I further understand that I will receive newsletters, company news, and product updates.
           </p>
-          <button type="submit" className="create-account-btn">Create Account</button>
+          <button type="submit" className="create-account-btn" disabled={loading}>
+            {loading ? "Creating Account..." : "Create Account"}
+          </button>
         </form>
-        <Link to="/login" className="login-link">Already have an account? Log in</Link>
+        <Link to="/login" className="login-link">
+          Already have an account? Log in
+        </Link>
       </div>
     </div>
   );
 };
 
+// CSS Fixes
 const styles = ` 
   body {
     background-color: #f0f2f5;
@@ -133,10 +147,11 @@ const styles = `
   }
 
   .error {
-  color: "red";
-  fontSize: "12px";
-  marginTop: "5px";
-}
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+    text-align: left;
+  }
 
   .signup-box h2 {
     font-size: 24px;
@@ -201,6 +216,11 @@ const styles = `
     background-color: #36a420;
   }
 
+  .create-account-btn:disabled {
+    background-color: #9ccf85;
+    cursor: not-allowed;
+  }
+
   .login-link {
     display: inline-block;
     margin-top: 15px;
@@ -212,8 +232,6 @@ const styles = `
   .login-link:hover {
     text-decoration: underline;
   }
-
-  
 
   @media (max-width: 768px) {
     .signup-container {
