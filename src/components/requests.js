@@ -108,7 +108,7 @@ export const CreateAccount = async (data) => {
         if (status === 400 && errorData.errors) {
           const validationErrors = Object.entries(errorData.errors)
             .map(([field, messages]) => messages.join(" ")) 
-            .join(" "); /
+            .join(" "); 
           return validationErrors;
         }
       
