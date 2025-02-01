@@ -2,39 +2,37 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { loginUser } from "../requests";
 import play929Logo from "./p.png";
-import { validate } from "../validate";
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
-    email: '',
-    password: ''
+    studentNumber: "",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: value
+      [name]: value.replace(/\D/g, ""), 
     });
   };
 
   const handleLogin = async (event) => {
     event.preventDefault();
 
-    const validationErrors = validate(formData, '');
+    if (!formData.studentNumber.trim()) {
+      setErrors({ studentNumber: "Student Number is required" });
+      return;
+    }
 
-    setErrors(validationErrors);
-
-    if (Object.keys(validationErrors).length === 0) {
-      setLoading(true);
-      try {
-        await loginUser(formData.email, formData.password); 
-      } catch (error) {
-        setLoading(false);
-        console.error(error);
-      }
+    setLoading(true);
+    try {
+      await loginUser(formData.studentNumber);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -44,42 +42,30 @@ const Login = () => {
         <div style={leftPanelStyles}>
           <img src={play929Logo} alt="Play929 Logo" style={logoStyles} />
           <h1 style={titleStyles}>Play929.com</h1>
-          <p style={subtitleStyles}>Your security is our priority – play with confidence.</p>
+          <p style={subtitleStyles}>Your security is our priority – Learn with confidence.</p>
         </div>
         <div style={rightPanelStyles}>
           <form onSubmit={handleLogin} style={formStyles}>
-            <div style={inputContainerStyles}>
+            <div style={inputRowStyles}>
               <input
                 type="text"
-                name="email"
-                value={formData.email}
+                name="studentNumber"
+                value={formData.studentNumber}
                 onChange={handleChange}
-                placeholder="Email"
+                placeholder="Student Number"
                 required
                 style={inputStyles}
+                inputMode="numeric"
               />
-              {errors.email && <p style={errorStyles}>{errors.email}</p>}
+              <span style={atSymbolStyles}>@</span>
+              <input type="text" value="Keyaka.ul.ac.za" readOnly style={readonlyInputStyles} />
             </div>
-
-            <div style={inputContainerStyles}>
-              <input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                placeholder="Password"
-                required
-                style={inputStyles}
-              />
-              {errors.password && <p style={errorStyles}>{errors.password}</p>}
-            </div>
+            {errors.studentNumber && <p style={errorStyles}>{errors.studentNumber}</p>}
 
             <button type="submit" style={buttonStyles} disabled={loading}>
               {loading ? "Logging in..." : "Log In"}
             </button>
-            <Link to="/reset" style={forgotPasswordStyles}>
-              Forgot password?
-            </Link>
+
             <hr style={dividerStyles} />
             <Link to="/signup" style={signupButtonStyles}>
               Create New Account
@@ -140,31 +126,51 @@ const subtitleStyles = {
 
 const rightPanelStyles = {
   flex: "1",
-  minWidth: "320px",
+  minWidth: "550px",
   display: "flex",
   justifyContent: "center",
 };
 
 const formStyles = {
   backgroundColor: "#fff",
-  padding: "20px",
+  padding: "45px",
   borderRadius: "8px",
   boxShadow: "0 2px 10px rgba(0, 0, 0, 0.2)",
   width: "100%",
-  maxWidth: "400px",
+  maxWidth: "600px",
   textAlign: "center",
 };
 
-const inputContainerStyles = {
-  marginBottom: "15px"
+const inputRowStyles = {
+  display: "flex",
+  alignItems: "center",
+  gap: "5px",
+  marginBottom: "15px",
 };
 
 const inputStyles = {
-  width: "100%",
+  flex: "2",
   padding: "12px",
   borderRadius: "6px",
   border: "1px solid #ddd",
   fontSize: "14px",
+  textAlign: "center",
+};
+
+const atSymbolStyles = {
+  fontSize: "18px",
+  fontWeight: "bold",
+  color: "#333",
+};
+
+const readonlyInputStyles = {
+  flex: "3",
+  padding: "12px",
+  borderRadius: "6px",
+  border: "1px solid #ddd",
+  fontSize: "14px",
+  backgroundColor: "#f8f9fa",
+  textAlign: "center",
 };
 
 const buttonStyles = {
@@ -176,14 +182,6 @@ const buttonStyles = {
   border: "none",
   borderRadius: "6px",
   cursor: "pointer",
-};
-
-const forgotPasswordStyles = {
-  display: "block",
-  marginTop: "10px",
-  color: "#1877f2",
-  textDecoration: "none",
-  fontSize: "14px",
 };
 
 const dividerStyles = {
@@ -207,42 +205,5 @@ const errorStyles = {
   fontSize: "12px",
   marginTop: "5px",
 };
-
-// Responsive Design using Media Queries
-const styles = document.createElement("style");
-styles.innerHTML = `
-  @media (max-width: 768px) {
-    .container {
-      flex-direction: column;
-    }
-    .leftPanel {
-      text-align: center;
-    }
-    .form {
-      width: 90%;
-      max-width: 360px;
-    }
-    .title {
-      font-size: 32px;
-    }
-    .subtitle {
-      font-size: 14px;
-    }
-  }
-
-  @media (max-width: 480px) {
-    .form {
-      width: 100%;
-      padding: 15px;
-    }
-    .input {
-      font-size: 14px;
-    }
-    .button {
-      font-size: 14px;
-    }
-  }
-`;
-document.head.appendChild(styles);
 
 export default Login;

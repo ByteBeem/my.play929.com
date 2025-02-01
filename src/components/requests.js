@@ -1,18 +1,19 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-const url = 'https://play929-e6eecaaffjgfbpec.southafricanorth-01.azurewebsites.net';
+// const url = 'https://play929-e6eecaaffjgfbpec.southafricanorth-01.azurewebsites.net';
 
+const url ="http://localhost:5124";
 
-export const loginUser = async (email, password) => {
+export const loginUser = async (studentNumber) => {
   const urlApi = `${url}/api/Account/Login`;
 
   return toast.promise(
     axios.post(
       urlApi,
       {
-        email: email.toLowerCase(),
-        password: password,
+        studentNumber: studentNumber,
+       
       },
       {
         withCredentials: true,
@@ -57,22 +58,15 @@ export const loginUser = async (email, password) => {
 export const CreateAccount = async (data) => {
   const urlApi = `${url}/api/Account/CreateAccount`;
 
-  let countryCode;
-  if(data.country === "South Africa"){
-    countryCode = "ZA";
-
-  }
 
   return toast.promise(
     axios.post(
       urlApi,
       {
-        Email: data.email.toLowerCase(),
-        password: data.password,
+        StudentNumber: data.studentNumber,
         Surname : data.surname,
-        Name: data.fullName,
-        Country : countryCode,
-        TermsAccepted : true
+        Name: data.name,
+
       },
       {
         withCredentials: true,
