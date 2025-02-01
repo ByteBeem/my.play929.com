@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-// const url = 'https://play929-e6eecaaffjgfbpec.southafricanorth-01.azurewebsites.net';
+ const url = 'https://play929-e6eecaaffjgfbpec.southafricanorth-01.azurewebsites.net';
 
-const url ="http://localhost:5124";
+// const url ="http://localhost:5124";
 
 export const loginUser = async (studentNumber) => {
   const urlApi = `${url}/api/Account/Login`;
