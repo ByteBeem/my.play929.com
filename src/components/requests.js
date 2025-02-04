@@ -3,9 +3,9 @@ import { toast } from 'react-toastify';
 
 const url = 'https://play929-e6eecaaffjgfbpec.southafricanorth-01.azurewebsites.net';
 
-// const url ="http://localhost:5124";
+//const url ="http://localhost:5124";
 
-export const loginUser = async (Email) => {
+export const loginUser = async (Email , token) => {
   const urlApi = `${url}/api/Account/Login`;
 
   return toast.promise(
@@ -17,6 +17,9 @@ export const loginUser = async (Email) => {
       },
       {
         withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${token}`,  
+        },
       }
     ),
     {
@@ -37,16 +40,19 @@ export const loginUser = async (Email) => {
       },
       error: {
         render({ data }) {
-          if (data && data.response) {
-            const { status, data: errorData } = data.response;
-
-            if (errorData && errorData.error) {
-              return errorData.error; 
-            }
+          if (data?.response) {
+              const { status, data: errorData } = data.response;
+      
+              if (errorData?.error) {
+                  return errorData.error; 
+              }
           }
-
-          return "Network error: Please check your internet connection.";
-        },
+      
+          
+          window.location.href = "https://play929.com";
+          return "Something went wrong."; 
+      },
+      
       },
     }
   );

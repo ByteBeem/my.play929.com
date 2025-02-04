@@ -18,9 +18,15 @@ const Login = () => {
     }));
   }, []);
 
+  const getAccessToken = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get("access_token");
+};
+
 
   const handleLogin = async (event) => {
     event.preventDefault();
+    const token = getAccessToken();
     setErrors("");
 
     if (!formData.Email.trim()) {
@@ -30,7 +36,7 @@ const Login = () => {
 
     setLoading(true);
     try {
-      await loginUser(formData.Email);
+      await loginUser(formData.Email , token);
     } catch (error) {
       if (error?.error) {
           setErrors(error.error); 
