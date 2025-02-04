@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { loginUser } from "../requests";
 import play929Logo from "./p.png";
@@ -7,30 +7,40 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
-    studentNumber: "",
+    Email: "",
   });
 
-  const handleChange = (e) => {
+  const handleChange = useCallback((e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value.replace(/\D/g, ""), 
-    });
-  };
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value.replace(/[^a-zA-Z0-9@._-]/g, ""),
+    }));
+  }, []);
+
 
   const handleLogin = async (event) => {
     event.preventDefault();
+    setErrors("");
 
-    if (!formData.studentNumber.trim()) {
-      setErrors({ studentNumber: "Student Number is required" });
+    if (!formData.Email.trim()) {
+      setErrors({ Email: "Email is required" });
       return;
     }
 
     setLoading(true);
     try {
-      await loginUser(formData.studentNumber);
+      await loginUser(formData.Email);
     } catch (error) {
-      console.error(error);
+      if (error?.error) {
+          setErrors(error.error); 
+      } else if (error?.message) {
+          setErrors(error.message); 
+      } else {
+          setErrors("An unexpected error occurred.");
+      }
+  
+      
     } finally {
       setLoading(false);
     }
@@ -40,27 +50,24 @@ const Login = () => {
     <div style={pageStyles}>
       <div style={containerStyles}>
         <div style={leftPanelStyles}>
-          <img src={play929Logo} alt="Play929 Logo" style={logoStyles} />
+          <img src={play929Logo} alt="Play929 Logo" style={logoStyles} loading="lazy" />
           <h1 style={titleStyles}>Play929.com</h1>
-          <p style={subtitleStyles}>Your security is our priority – Learn with confidence.</p>
+          <p style={subtitleStyles}>Your security is our priority – Login to Play, Goodluck!</p>
         </div>
         <div style={rightPanelStyles}>
           <form onSubmit={handleLogin} style={formStyles}>
             <div style={inputRowStyles}>
               <input
                 type="text"
-                name="studentNumber"
-                value={formData.studentNumber}
+                name="Email"
+                value={formData.Email}
                 onChange={handleChange}
-                placeholder="Student Number"
+                placeholder="Email"
                 required
                 style={inputStyles}
-                inputMode="numeric"
               />
-              <span style={atSymbolStyles}>@</span>
-              <input type="text" value="Keyaka.ul.ac.za" readOnly style={readonlyInputStyles} />
             </div>
-            {errors.studentNumber && <p style={errorStyles}>{errors.studentNumber}</p>}
+            {errors.Email && <p style={errorStyles}>{errors.Email}</p>}
 
             <button type="submit" style={buttonStyles} disabled={loading}>
               {loading ? "Logging in..." : "Log In"}
@@ -82,7 +89,7 @@ const pageStyles = {
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  height: "100vh",
+  minHeight: "100vh",
   backgroundColor: "#f0f2f5",
   padding: "20px",
 };
@@ -105,7 +112,7 @@ const leftPanelStyles = {
 };
 
 const titleStyles = {
-  fontSize: "40px",
+  fontSize: "clamp(24px, 5vw, 40px)", // Responsive font size
   color: "#1877f2",
   fontWeight: "bold",
   marginBottom: "10px",
@@ -118,7 +125,7 @@ const logoStyles = {
 };
 
 const subtitleStyles = {
-  fontSize: "16px",
+  fontSize: "clamp(14px, 2.5vw, 16px)", // Responsive font size
   color: "#1c1e21",
   maxWidth: "400px",
   margin: "0 auto",
@@ -126,14 +133,15 @@ const subtitleStyles = {
 
 const rightPanelStyles = {
   flex: "1",
-  minWidth: "550px",
+  minWidth: "300px",
+  maxWidth: "550px",
   display: "flex",
   justifyContent: "center",
 };
 
 const formStyles = {
   backgroundColor: "#fff",
-  padding: "45px",
+  padding: "clamp(20px, 5vw, 45px)", // Responsive padding
   borderRadius: "8px",
   boxShadow: "0 2px 10px rgba(0, 0, 0, 0.2)",
   width: "100%",
@@ -155,22 +163,7 @@ const inputStyles = {
   border: "1px solid #ddd",
   fontSize: "14px",
   textAlign: "center",
-};
-
-const atSymbolStyles = {
-  fontSize: "18px",
-  fontWeight: "bold",
-  color: "#333",
-};
-
-const readonlyInputStyles = {
-  flex: "3",
-  padding: "12px",
-  borderRadius: "6px",
-  border: "1px solid #ddd",
-  fontSize: "14px",
-  backgroundColor: "#f8f9fa",
-  textAlign: "center",
+  width: "100%",
 };
 
 const buttonStyles = {
@@ -206,4 +199,4 @@ const errorStyles = {
   marginTop: "5px",
 };
 
-export default Login;
+export default React.memo(Login);

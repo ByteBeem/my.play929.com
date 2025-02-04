@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import play929Logo from "./p.png";
+import {verifyCode} from "../requests";
 
 const SignInCode = () => {
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [studentNumber, setStudentNumber] = useState("");
+  const [Email, setEmail] = useState("");
   const [token, setToken] = useState("");
 
   const location = useLocation();
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    const student = params.get("student");
+    const email = params.get("email");
     const accessToken = params.get("access_token");
-    if (student) setStudentNumber(student);
+    if (email) setEmail(email);
     if (accessToken) setToken(accessToken);
   }, [location]);
 
@@ -24,23 +25,23 @@ const SignInCode = () => {
   };
 
   const handleSubmit = async (event) => {
+    
     event.preventDefault();
+    setError("");
     setLoading(true);
     try {
-      const response = await fetch("https://your-api.com/verify-code", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ studentNumber, code }),
-      });
-
-      if (!response.ok) throw new Error("Invalid code. Please try again.");
+      await verifyCode(Email , code , token)
       
-      console.log("Code verified successfully");
-    } catch (err) {
-      setError(err.message);
+    } catch (error) {
+      if (error?.error) {
+        setError(error.error); 
+      } else if (error?.message) {
+        setError(error.message); 
+      } else {
+        setError("An unexpected error occurred.");
+      }
+  
+    } finally {
       setLoading(false);
     }
   };
@@ -51,13 +52,13 @@ const SignInCode = () => {
         <div style={leftPanelStyles}>
           <img src={play929Logo} alt="Play929 Logo" style={logoStyles} />
           <h1 style={titleStyles}>Play929.com</h1>
-          <p style={subtitleStyles}>Your security is our priority – Learn with confidence.</p>
+          <p style={subtitleStyles}>Your security is our priority – Please check your email.</p>
         </div>
         <div style={rightPanelStyles}>
           <form onSubmit={handleSubmit} style={formStyles}>
-            <h2 style={headerStyles}>
-              Enter the Sign-in code sent to {studentNumber}@keyaka.ul.ac.za
-            </h2>
+            <h1 style={headerStyles}>
+              Enter the Sign-in code sent to {Email}
+            </h1>
             <div style={inputContainerStyles}>
               <input
                 type="text"
@@ -87,7 +88,7 @@ const pageStyles = {
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  height: "100vh",
+  minHeight: "100vh",
   backgroundColor: "#f0f2f5",
   padding: "20px",
 };
@@ -110,7 +111,7 @@ const leftPanelStyles = {
 };
 
 const titleStyles = {
-  fontSize: "40px",
+  fontSize: "clamp(24px, 5vw, 40px)", // Responsive font size
   color: "#1877f2",
   fontWeight: "bold",
   marginBottom: "10px",
@@ -123,7 +124,7 @@ const logoStyles = {
 };
 
 const subtitleStyles = {
-  fontSize: "16px",
+  fontSize: "clamp(14px, 2.5vw, 16px)", // Responsive font size
   color: "#1c1e21",
   maxWidth: "400px",
   margin: "0 auto",
@@ -131,14 +132,15 @@ const subtitleStyles = {
 
 const rightPanelStyles = {
   flex: "1",
-  minWidth: "550px",
+  minWidth: "300px",
+  maxWidth: "550px",
   display: "flex",
   justifyContent: "center",
 };
 
 const formStyles = {
   backgroundColor: "#fff",
-  padding: "45px",
+  padding: "clamp(20px, 5vw, 45px)", // Responsive padding
   borderRadius: "8px",
   boxShadow: "0 2px 10px rgba(0, 0, 0, 0.2)",
   width: "100%",
@@ -146,9 +148,25 @@ const formStyles = {
   textAlign: "center",
 };
 
-const headerStyles = { fontSize: "18px", marginBottom: "10px", textAlign: "center" };
+const inputRowStyles = {
+  display: "flex",
+  alignItems: "center",
+  gap: "5px",
+  marginBottom: "15px",
+};
+
+const inputStyles = {
+  flex: "2",
+  padding: "12px",
+  borderRadius: "6px",
+  border: "1px solid #ddd",
+  fontSize: "14px",
+  textAlign: "center",
+  width: "100%",
+};
+
+const headerStyles = { fontSize: "15px", marginBottom: "15px", textAlign: "center" };
 const inputContainerStyles = { marginBottom: "15px" };
-const inputStyles = { width: "100%", padding: "12px", borderRadius: "6px", border: "1px solid #ddd", fontSize: "14px" };
 const buttonStyles = { width: "100%", padding: "12px", backgroundColor: "#1877f2", color: "#fff", fontSize: "16px", border: "none", borderRadius: "6px", cursor: "pointer" };
 const forgotPasswordStyles = { display: "block", marginTop: "10px", color: "#1877f2", textDecoration: "none", fontSize: "14px" };
 const errorStyles = { color: "red", fontSize: "12px", marginTop: "5px" };
