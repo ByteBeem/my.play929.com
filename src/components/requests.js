@@ -122,7 +122,7 @@ export const CreateAccount = async (data) => {
         email: data.email,
         Surname : data.surname,
         Name: data.name,
-        country :data.country
+        course :data.course
 
       },
       {

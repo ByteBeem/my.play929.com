@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { CreateAccount } from "../requests"; 
 import play929Logo from "../Login/p.png";
-import { countries } from "countries-list";
 
 const SignUp = () => {
   const [loading, setLoading] = useState(false);
@@ -11,13 +10,8 @@ const SignUp = () => {
     name: "",
     surname: "",
     email: "",
-    country: "South Africa", 
+    course: "", 
   });
-
-// Generate country list with South Africa first
-const allCountries = ["South Africa", 
-  ...Object.values(countries).map(c => c.name).sort().filter(c => c !== "South Africa")
-];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,7 +28,8 @@ const allCountries = ["South Africa",
     if (!formData.name.trim()) newErrors.name = "Name is required";
     if (!formData.surname.trim()) newErrors.surname = "Surname is required";
     if (!formData.email.trim() || !/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = "Valid email is required";
-    
+    if (!formData.course) newErrors.course = "Please select a course";
+
     if (Object.keys(newErrors).length) {
       setErrors(newErrors);
       return;
@@ -56,24 +51,34 @@ const allCountries = ["South Africa",
         <div style={leftPanelStyles}>
           <img src={play929Logo} alt="Play929 Logo" style={logoStyles} />
           <h1 style={titleStyles}>Play929.com</h1>
-          <p style={subtitleStyles}>Your security is our priority – Create your Play929 account.</p>
+          <p style={subtitleStyles}>Enhance your learning experience - Create your Play929 account today.</p>
         </div>
         <div style={rightPanelStyles}>
           <form onSubmit={handleSignUp} style={formStyles}>
             <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Full Name(s)" required style={inputStyles} />
             {errors.name && <p style={errorStyles}>{errors.name}</p>}
 
-            <input type="text" name="surname" value={formData.surname} onChange={handleChange} placeholder="Surname (Last Name)" required style={inputStyles} />
+            <input type="text" name="surname" value={formData.surname} onChange={handleChange} placeholder="Surname" required style={inputStyles} />
             {errors.surname && <p style={errorStyles}>{errors.surname}</p>}
 
             <input type="email" name="email" value={formData.email} onChange={handleChange} placeholder="Email" required style={inputStyles} />
             {errors.email && <p style={errorStyles}>{errors.email}</p>}
 
-            <select name="country" value={formData.country} onChange={handleChange} required style={inputStyles}>
-              {allCountries.map((country, index) => (
-                <option key={index} value={country}>{country}</option>
-              ))}
+            {/* Non-editable University field */}
+            <input 
+              type="text" 
+              value="University Of Limpopo" 
+              readOnly 
+              style={{ ...inputStyles, backgroundColor: "#f3f3f3", cursor: "not-allowed" }} 
+            />
+
+            {/* Course selection dropdown */}
+            <select name="course" value={formData.course} onChange={handleChange} required style={inputStyles}>
+              <option value="">Choose Course</option>
+              <option value="BSc Mathematical Science">BSc Mathematical Science</option>
+              <option value="BSc Geology">BSc Geology</option>
             </select>
+            {errors.course && <p style={errorStyles}>{errors.course}</p>}
 
             <button type="submit" style={buttonStyles} disabled={loading}>
               {loading ? "Creating..." : "Create Account"}
