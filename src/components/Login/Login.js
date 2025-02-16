@@ -58,7 +58,7 @@ const Login = () => {
         <div style={leftPanelStyles}>
           <img src={play929Logo} alt="Play929 Logo" style={logoStyles} loading="lazy" />
           <h1 style={titleStyles}>Play929.com</h1>
-          <p style={subtitleStyles}>Your security is our priority—Log in to learn and succeed. Good luck!</p>
+          <p style={subtitleStyles}>Your security is our priority—Log in to Code and Win. Good luck!</p>
         </div>
         <div style={rightPanelStyles}>
           <form onSubmit={handleLogin} style={formStyles}>

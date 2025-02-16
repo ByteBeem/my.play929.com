@@ -21,6 +21,7 @@
     "react-scripts": "^5.0.1",
     "react-toastify": "^10.0.5"
   },
+  "proxy": "https://play929-apim.azure-api.net",
   "keywords": [],
   "author": "",
   "license": "ISC",

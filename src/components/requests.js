@@ -1,12 +1,12 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-const url = 'https://myauthservice.azurewebsites.net';
+
 
 //const url ="http://localhost:5124";
 
 export const loginUser = async (Email , token) => {
-  const urlApi = `${url}/api/auth/login`;
+  const urlApi = '/api/auth/login';
 
   return toast.promise(
     axios.post(
@@ -60,7 +60,7 @@ export const loginUser = async (Email , token) => {
 
 
 export const verifyCode = async (Email , code , token) => {
-  const urlApi = `${url}/api/Account/VerifyCode`;
+  const urlApi = '/api/Account/VerifyCode';
 
   return toast.promise(
     axios.post(
@@ -112,7 +112,7 @@ export const verifyCode = async (Email , code , token) => {
 // create account
 
 export const CreateAccount = async (data) => {
-  const urlApi = `${url}/api/auth/register`;
+  const urlApi = '/api/auth/register';
 
 
   return toast.promise(
