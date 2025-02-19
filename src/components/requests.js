@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 
 
 
-const url ="https://myauthservice.azurewebsites.net";
+const url ="http://myauthservice.azurewebsites.net";
 
 export const loginUser = async (Email , token) => {
   const urlApi = `${url}/api/auth/login`;
@@ -41,17 +41,23 @@ export const loginUser = async (Email , token) => {
       error: {
         render({ data }) {
           if (data?.response) {
-              const { status, data: errorData } = data.response;
+            const { status, data: errorData } = data.response;
+        
+            if (errorData?.errors && Array.isArray(errorData.errors) && errorData.errors.length > 0) {
+                return errorData.errors.join(", "); 
+            }
+        
+            if (errorData?.error) {
+                return errorData.error;
+            }
+        
+        
+        return "Something went wrong.";
+        
       
-              if (errorData?.error) {
-                  return errorData.error; 
-              }
-          }
-
-          return "Something went wrong."; 
-      },
-      
-      },
+      }
+    }
+  }
     }
   );
 };
@@ -118,9 +124,9 @@ export const CreateAccount = async (data) => {
       urlApi,
       {
         email: data.email,
-        Surname : data.surname,
-        Name: data.name,
-        course :data.course
+        LastName : data.surname,
+        FirstName: data.name,
+        country :data.country
 
       },
       {
@@ -145,23 +151,22 @@ export const CreateAccount = async (data) => {
       },
       error: {
         render({ data }) {
-          if (data && data.response) {
+          if (data?.response) {
             const { status, data: errorData } = data.response;
-      
-            // If API sends a specific error message, use it
-            if (errorData && errorData.error) {
-              return errorData.error; 
+        
+            if (errorData?.errors && Array.isArray(errorData.errors) && errorData.errors.length > 0) {
+                return errorData.errors.join(", "); 
             }
-
-         
-        if (status === 400 && errorData.errors) {
-          const validationErrors = Object.entries(errorData.errors)
-            .map(([field, messages]) => messages.join(" ")) 
-            .join(" "); 
-          return validationErrors;
-        }
+        
+            if (errorData?.error) {
+                return errorData.error;
+            }
+        
+        
+        return "Something went wrong.";
+        
       
-          }
+      }
       
           return "Network error: Please check your internet connection.";
         },
