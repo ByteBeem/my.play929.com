@@ -3,10 +3,10 @@ import { toast } from 'react-toastify';
 
 
 
-//const url ="http://localhost:5124";
+const url ="https://myauthservice.azurewebsites.net";
 
 export const loginUser = async (Email , token) => {
-  const urlApi = '/api/auth/login';
+  const urlApi = `${url}/api/auth/login`;
 
   return toast.promise(
     axios.post(
@@ -47,9 +47,7 @@ export const loginUser = async (Email , token) => {
                   return errorData.error; 
               }
           }
-      
-          
-          window.location.href = "https://play929.com";
+
           return "Something went wrong."; 
       },
       
@@ -60,7 +58,7 @@ export const loginUser = async (Email , token) => {
 
 
 export const verifyCode = async (Email , code , token) => {
-  const urlApi = '/api/Account/VerifyCode';
+  const urlApi = `${url}/api/Account/VerifyCode`;
 
   return toast.promise(
     axios.post(
@@ -112,7 +110,7 @@ export const verifyCode = async (Email , code , token) => {
 // create account
 
 export const CreateAccount = async (data) => {
-  const urlApi = '/api/auth/register';
+  const urlApi = `${url}/api/auth/register`;
 
 
   return toast.promise(
