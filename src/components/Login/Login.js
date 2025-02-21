@@ -71,18 +71,27 @@ const Login = () => {
                 placeholder="Email"
                 required
                 style={inputStyles}
+                disabled={loading} 
               />
             </div>
             {errors.Email && <p style={errorStyles}>{errors.Email}</p>}
-
+            {!loading && (
+              <>
             <button type="submit" style={buttonStyles} disabled={loading}>
               {loading ? "Logging in..." : "Log In"}
             </button>
-
+            </>
+            )}
+            {loading && <p style={loadingStyles}>Logging in, please wait...</p>}
+            
+            {!loading && (
+              <>
             <hr style={dividerStyles} />
             <Link to="/signup" style={signupButtonStyles}>
               Create New Account
             </Link>
+            </>
+            )}
           </form>
         </div>
       </div>
@@ -154,6 +163,8 @@ const formStyles = {
   maxWidth: "600px",
   textAlign: "center",
 };
+
+const loadingStyles = { color: "#1877f2", fontSize: "16px", fontWeight: "bold", marginTop: "15px" };
 
 const inputRowStyles = {
   display: "flex",

@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 
 
 
-const url ="http://myauthservice.azurewebsites.net";
+const url ="https://myauthservice.azurewebsites.net";
 
 export const loginUser = async (Email , token) => {
   const urlApi = `${url}/api/auth/login`;
@@ -28,12 +28,13 @@ export const loginUser = async (Email , token) => {
         render({ data }) {
           if (data.status === 200) {
             const redirectLink = data.data.link;
+            const message = data.data.message;
 
             setTimeout(() => {
               window.location.href = redirectLink;
             }, 2000);
 
-            return "Welcome back.";
+            return message || "Welcome back.";
           }
           return "Unexpected success response.";
         },
@@ -64,7 +65,7 @@ export const loginUser = async (Email , token) => {
 
 
 export const verifyCode = async (Email , code , token) => {
-  const urlApi = `${url}/api/Account/VerifyCode`;
+  const urlApi = `${url}/api/auth/VerifyCode`;
 
   return toast.promise(
     axios.post(
@@ -86,12 +87,14 @@ export const verifyCode = async (Email , code , token) => {
         render({ data }) {
           if (data.status === 200) {
             const redirectLink = data.data.link;
+            const message = data.data.message;
+            
 
             setTimeout(() => {
               window.location.href = redirectLink;
             }, 2000);
 
-            return "Correct , redirecting.";
+            return message || "Correct , redirecting.";
           }
           return "Unexpected success response.";
         },
@@ -101,9 +104,13 @@ export const verifyCode = async (Email , code , token) => {
           if (data && data.response) {
             const { status, data: errorData } = data.response;
 
-            if (errorData && errorData.error) {
-              return errorData.error; 
-            }
+            if (errorData?.errors && Array.isArray(errorData.errors) && errorData.errors.length > 0) {
+              return errorData.errors.join(", "); 
+          }
+      
+          if (errorData?.error) {
+              return errorData.error;
+          }
           }
 
           return "Network error: Please check your internet connection.";
