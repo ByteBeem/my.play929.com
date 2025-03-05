@@ -2,11 +2,10 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 
 
-
-const url ="https://myauthservice.azurewebsites.net";
+const url ="http://localhost:5220";
 
 export const loginUser = async (Email , token) => {
-  const urlApi = `${url}/api/auth/login`;
+  const urlApi = `${url}/api/auth/Login`;
 
   return toast.promise(
     axios.post(
@@ -51,12 +50,12 @@ export const loginUser = async (Email , token) => {
             if (errorData?.error) {
                 return errorData.error;
             }
+
+          }
         
         
         return "Something went wrong.";
         
-      
-      }
     }
   }
     }
@@ -131,8 +130,8 @@ export const CreateAccount = async (data) => {
       urlApi,
       {
         email: data.email,
-        LastName : data.surname,
-        FirstName: data.name,
+         LastName: data.surname,
+         FirstName: data.name,
         country :data.country
 
       },
@@ -146,12 +145,13 @@ export const CreateAccount = async (data) => {
         render({ data }) {
           if (data.status === 200) {
             const redirectLink = data.data.link;
+            const message = data.data.message;
 
             setTimeout(() => {
               window.location.href = redirectLink;
             }, 2000);
 
-            return "Account Created.";
+            return message || "Account Created.";
           }
           return "Unexpected success response.";
         },

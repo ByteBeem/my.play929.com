@@ -14,8 +14,8 @@ const SignInCode = () => {
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    const email = params.get("email");
-    const accessToken = params.get("access_token");
+    const email = params.get("user");
+    const accessToken = params.get("sid");
     if (email) setEmail(email);
     if (accessToken) setToken(accessToken);
   }, [location]);
@@ -67,16 +67,23 @@ const SignInCode = () => {
                 placeholder="Enter Code"
                 required
                 style={inputStyles}
+                disabled = {loading}
               />
               {error && <p style={errorStyles}>{error}</p>}
             </div>
+            {!loading && (
+              <>
             <button type="submit" style={buttonStyles} disabled={loading}>
               {loading ? "Verifying..." : "Submit"}
             </button>
             <Link to="/resend" style={forgotPasswordStyles}>
               Resend Code
             </Link>
+            </>
+        )}
+          {loading && <p style={loadingStyles}>Validating, please wait...</p>}
           </form>
+     
         </div>
       </div>
     </div>
@@ -110,8 +117,11 @@ const leftPanelStyles = {
   padding: "20px",
 };
 
+const loadingStyles = { color: "#1877f2", fontSize: "16px", fontWeight: "bold", marginTop: "15px" };
+
+
 const titleStyles = {
-  fontSize: "clamp(24px, 5vw, 40px)", // Responsive font size
+  fontSize: "clamp(24px, 5vw, 40px)", 
   color: "#1877f2",
   fontWeight: "bold",
   marginBottom: "10px",
