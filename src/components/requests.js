@@ -2,7 +2,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 
 
-const url ="http://localhost:5220";
+const url ="http://localhost:5000";
 
 export const loginUser = async (Email , token) => {
   const urlApi = `${url}/api/auth/Login`;
@@ -119,6 +119,58 @@ export const verifyCode = async (Email , code , token) => {
   );
 };
 
+
+export const resendCode = async (Email , token) => {
+  const urlApi = `${url}/api/auth/resend`;
+
+  return toast.promise(
+    axios.post(
+      urlApi,
+      {
+        email: Email,
+        
+      },
+      {
+        withCredentials: true,  
+        headers: {
+          Authorization: `Bearer ${token}`,  
+        },
+      }
+    ),
+    {
+      pending: "resending your code...",
+      success: {
+        render({ data }) {
+          if (data.status === 200) {
+           
+            const message = data.data.message;
+  
+
+            return message || "Code resend , successfully.";
+          }
+          return "Unexpected success response.";
+        },
+      },
+      error: {
+        render({ data }) {
+          if (data && data.response) {
+            const { status, data: errorData } = data.response;
+
+            if (errorData?.errors && Array.isArray(errorData.errors) && errorData.errors.length > 0) {
+              return errorData.errors.join(", "); 
+          }
+      
+          if (errorData?.error) {
+              return errorData.error;
+          }
+          }
+
+          return "Network error: Please check your internet connection.";
+        },
+      },
+    }
+  );
+};
 // create account
 
 export const CreateAccount = async (data) => {
@@ -130,8 +182,8 @@ export const CreateAccount = async (data) => {
       urlApi,
       {
         email: data.email,
-         LastName: data.surname,
-         FirstName: data.name,
+        lastname: data.surname,
+         firstname: data.name,
         country :data.country
 
       },

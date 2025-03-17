@@ -2,7 +2,7 @@ import React, { useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { loginUser } from "../requests";
 import play929Logo from "./p.png";
-import welcomeImage from "../welcome.jpg"; 
+
 
 
 const Login = () => {
@@ -58,19 +58,22 @@ const Login = () => {
     return (
       <div style={pageStyles}>
         <div style={containerStyles}>
-        <div style={leftPanelStyles}>
-          <img src={play929Logo} alt="Play929 Logo" style={logoStyles} loading="lazy" />
-          <h1 style={titleStyles}>Play929.com</h1>
-          <p style={subtitleStyles}>Your security is our priority—Log in to Code and Win. Good luck!</p>
+          <div style={leftPanelStyles}>
+            <img src={play929Logo} alt="Play929 Logo" style={logoStyles} loading="lazy" />
+            <h1 style={titleStyles}>Play929.com</h1>
+            <p style={subtitleStyles}>Your security is our priority—Log in to Code and Win. Good luck!</p>
+          </div>
+          <div style={rightPanelStyles}>
+            <div style={welcomeTextContainer}>
+              
+              <p style={welcomeSubtitleStyles}>We're thrilled to have you with us. Get ready to experience the thrill of coding and winning!</p>
+            </div>
+          </div>
         </div>
-        <div style={rightPanelStyles}>
-          
-        </div>
-         </div>
-        <img src={welcomeImage} alt="Welcome" style={welcomeImageStyles} />
       </div>
     );
   }
+  
 
  
   return (
@@ -183,6 +186,34 @@ const formStyles = {
   width: "100%",
   maxWidth: "600px",
   textAlign: "center",
+};
+
+const welcomeTextContainer = {
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  flexDirection: 'column',
+  padding: '20px',
+  backgroundColor: '#fff', 
+  borderRadius: '8px',
+  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+};
+
+const welcomeTextStyles = {
+  fontSize: '2.5rem', 
+  fontWeight: 'bold',
+  color: 'black', 
+  textAlign: 'center',
+  letterSpacing: '1px',
+  marginBottom: '10px',
+};
+
+const welcomeSubtitleStyles = {
+  fontSize: '1.2rem',
+  color: 'blue', 
+  textAlign: 'center',
+  marginTop: '0',
+  fontStyle: 'italic',
 };
 
 const loadingStyles = { color: "#1877f2", fontSize: "16px", fontWeight: "bold", marginTop: "15px" };

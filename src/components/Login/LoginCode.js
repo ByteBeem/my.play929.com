@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import play929Logo from "./p.png";
-import {verifyCode} from "../requests";
+import {resendCode, verifyCode} from "../requests";
 
 const SignInCode = () => {
   const [code, setCode] = useState("");
   const [loading, setLoading] = useState(false);
+  const [loadingResend , setloadingResend]=useState(false);
   const [error, setError] = useState("");
   const [Email, setEmail] = useState("");
   const [token, setToken] = useState("");
@@ -46,6 +47,29 @@ const SignInCode = () => {
     }
   };
 
+  const handleResend = async(event)=>{
+    event.preventDefault();
+    setError("");
+    setloadingResend(true);
+
+    try {
+      await resendCode(Email , token)
+      
+    } catch (error) {
+      if (error?.error) {
+        setError(error.error); 
+      } else if (error?.message) {
+        setError(error.message); 
+      } else {
+        setError("An unexpected error occurred.");
+      }
+  
+    } finally {
+      setloadingResend(false);
+    }
+
+  };
+
   return (
     <div style={pageStyles}>
       <div style={containerStyles}>
@@ -76,12 +100,17 @@ const SignInCode = () => {
             <button type="submit" style={buttonStyles} disabled={loading}>
               {loading ? "Verifying..." : "Submit"}
             </button>
-            <Link to="/resend" style={forgotPasswordStyles}>
+            {!loadingResend && (
+              <>
+            <button onClick={handleResend} style={forgotPasswordStyles}>
               Resend Code
-            </Link>
+            </button>
+            </>
+          )}
             </>
         )}
           {loading && <p style={loadingStyles}>Validating, please wait...</p>}
+          {loadingResend && <p style={loadingStyles}>Resending code, please wait...</p>}
           </form>
      
         </div>
