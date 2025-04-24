@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import play929Logo from "../Login/p.png";
-import { verifyCode } from "../requests";
+import { verifyMFA } from "../requests";
 
 
 const SignInCode = () => {
@@ -33,7 +33,7 @@ const SignInCode = () => {
     setError("");
     setLoading(true);
     try {
-      await verifyCode(email , code , token)
+      await verifyMFA(email , code , token)
       
     } catch (error) {
       if (error?.error) {

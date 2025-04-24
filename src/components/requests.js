@@ -233,3 +233,60 @@ export const CreateAccount = async (data) => {
     }
   );
 };
+
+
+export const verifyMFA = async (Email , code , token) => {
+  const urlApi = `${url}/api/auth/verifyMFA`;
+
+  return toast.promise(
+    axios.post(
+      urlApi,
+      {
+        email: Email,
+        code,
+      },
+      {
+        withCredentials: true,  
+        headers: {
+          Authorization: `Bearer ${token}`,  
+        },
+      }
+    ),
+    {
+      pending: "Verifying your code...",
+      success: {
+        render({ data }) {
+          if (data.status === 200) {
+            const redirectLink = data.data.link;
+            const message = data.data.message;
+            
+
+            setTimeout(() => {
+              window.location.href = redirectLink;
+            }, 2000);
+
+            return message || "Correct , redirecting.";
+          }
+          return "Unexpected success response.";
+        },
+      },
+      error: {
+        render({ data }) {
+          if (data && data.response) {
+            const { status, data: errorData } = data.response;
+
+            if (errorData?.errors && Array.isArray(errorData.errors) && errorData.errors.length > 0) {
+              return errorData.errors.join(", "); 
+          }
+      
+          if (errorData?.error) {
+              return errorData.error;
+          }
+          }
+
+          return "Network error: Please check your internet connection.";
+        },
+      },
+    }
+  );
+};
