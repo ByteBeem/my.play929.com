@@ -242,7 +242,7 @@ export const verifyMFA = async (Email , code , token) => {
     axios.post(
       urlApi,
       {
-        email: Email,
+        sid: token,
         code,
       },
       {
