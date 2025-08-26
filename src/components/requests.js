@@ -2,22 +2,24 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 
 
-const url ="https://api.play929.com:";
+const url ="http://localhost:5245";
 
-export const loginUser = async (Email , token) => {
-  const urlApi = `${url}/api/auth/Login`;
+export const loginUser = async (email , password) => {
+  const urlApi = `${url}/api/user/login`;
 
   return toast.promise(
     axios.post(
       urlApi,
       {
-        email: Email,
+        email ,
+        password,
        
       },
       {
         withCredentials: true,
         headers: {
-          Authorization: `Bearer ${token}`,  
+          'Content-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest' 
         },
       }
     ),
@@ -26,8 +28,10 @@ export const loginUser = async (Email , token) => {
       success: {
         render({ data }) {
           if (data.status === 200) {
+            console.log(data)
             const redirectLink = data.data.link;
             const message = data.data.message;
+            
 
             setTimeout(() => {
               window.location.href = redirectLink;
@@ -62,6 +66,58 @@ export const loginUser = async (Email , token) => {
   );
 };
 
+export const requestPasswordReset = async ({ email }) => {
+  try {
+    const response = await axios.post(
+      `${url}/api/auth/forgot-password`,
+      {
+        email: email.toLowerCase().trim(), 
+        
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest' 
+        },
+        timeout: 10000, 
+        withCredentials: true 
+      }
+    );
+
+    
+    return {
+      success: true,
+      message: response.data?.message || 'Password reset instructions sent'
+    };
+  } catch (error) {
+   
+    let errorMessage = 'Failed to process password reset request';
+    
+    if (error.response) {
+
+      errorMessage = error.response.data?.message || 
+                    getStandardErrorMessage(error.response.status);
+    } else if (error.request) {
+      
+      errorMessage = 'Network error - please try again';
+    }
+
+    throw new Error(errorMessage);
+  }
+};
+
+const getStandardErrorMessage = (statusCode) => {
+  const messages = {
+    400: 'Invalid request format',
+    401: 'Authentication required',
+    403: 'Action not allowed',
+    404: 'Account not found', 
+    429: 'Too many requests - please wait before trying again',
+    500: 'Server error - please try again later'
+  };
+
+  return messages[statusCode] || 'Unable to process your request';
+};
 
 export const verifyCode = async (Email , code , token) => {
   const urlApi = `${url}/api/auth/VerifyCode`;
@@ -174,17 +230,20 @@ export const resendCode = async (Email , token) => {
 // create account
 
 export const CreateAccount = async (data) => {
-  const urlApi = `${url}/api/auth/register`;
+  const urlApi = `${url}/api/user/register`;
 
 
   return toast.promise(
     axios.post(
       urlApi,
       {
-        email: data.email,
-        lastname: data.surname,
-         firstname: data.name,
-        country :data.country
+        Email: data.email,
+        Surname: data.surname,
+        FullNames: data.name,
+        idNumber :data.idNumber,
+        PhoneNumber: data.cellphone,
+        Password: data.password,
+        ConfirmPassword: data.confirmPassword,
 
       },
       {
