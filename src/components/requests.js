@@ -2,7 +2,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 
 
-const url ="http://localhost:5245";
+const url ="https://play929-bjdjb9bsgvg3abde.switzerlandnorth-01.azurewebsites.net";
 
 export const loginUser = async (email , password) => {
   const urlApi = `${url}/api/user/login`;
