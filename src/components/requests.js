@@ -2,7 +2,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 
 
-const url ="https://play929-bjdjb9bsgvg3abde.switzerlandnorth-01.azurewebsites.net";
+const url ="https://secure.play929.com/";
 
 export const loginUser = async (email , password) => {
   const urlApi = `${url}/api/user/login`;
